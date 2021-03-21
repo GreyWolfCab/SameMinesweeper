@@ -1,18 +1,25 @@
 public class MainApp {
 
-    public static void main(String agrs[]) {
+    public static void main(String[] agrs) {
 
-        Board board = new GenerateBoard(9, 9);
+        int boardRow = 10;
+        int boardCol = 11;
+        Board board = new GenerateBoard(boardRow, boardCol);
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < boardRow; i++) {
 
-            for (int j = 0; j < 9; j++) {
+            for (int j = 0; j < boardCol; j++) {
 
-                System.out.print(board.accessBoard(i, j) + ", ");
+                System.out.print(board.getBoardPosition(i, j) + ", ");
 
             }
 
             System.out.println();
+
+        }
+
+        for (int i = 0; i < board.minePositions.length; i++) {
+            System.out.println(board.minePositions[i]);
         }
 
     }
