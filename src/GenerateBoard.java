@@ -1,12 +1,15 @@
 public class GenerateBoard extends Board {
 
     private static final char MINE = '*';
+    private int totalMines;
 
     public GenerateBoard(int row, int col) {
         rowDimension = row;
         colDimension = col;
+        totalMines = (int) Math.sqrt(row * col);
         generateBoard();
-        placeMines((int) Math.sqrt(row * col));//number of mines is square root of board size
+        placeMines();//number of mines is square root of board size
+        placeNumbers();
     }
 
     /**
@@ -29,10 +32,9 @@ public class GenerateBoard extends Board {
 
     /**
      * Randomly place mines on the board
-     * @param totalMines the total number of mines to place on the board
      */
     @Override
-    public void placeMines(int totalMines) {
+    public void placeMines() {
 
         minePositions = new MinePosition[totalMines];
 
@@ -56,6 +58,38 @@ public class GenerateBoard extends Board {
 
     @Override
     public void placeNumbers() {
+
+        for (int i = 0; i < totalMines; i++) {
+            int originRow = minePositions[i].getRow();
+            int originCol = minePositions[i].getCol();
+
+            for (int r = originRow - 1; r < originRow + 2; r++) {//iterate through 3x3 surrounding rows
+
+                //prevent r from being < 0 or > maxRow (avoid index out of bounds)
+                if (r >= 0 && r < rowDimension) {
+
+                    for (int c = originCol - 1; c < originCol + 2; c++) {//iterate through 3x3 surrounding cols
+
+                        //check if c is < 0 or > maxCol
+                        if ((c >= 0 && c < colDimension) && (r != originRow || c != originCol)) {
+                            //check if r & c are the origin
+                            char element = getBoardPosition(r, c);
+                            if (element != '*') {//avoid overwriting mines
+                                if (element == ' ') {//if blank space
+                                    setBoardPosition(r, c, '1');//intial mine detected
+                                } else {//multiple mines nearby
+                                    setBoardPosition(r, c, ++element);//increment mine indicator (maximum of 9)
+                                }
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
 
     }
 

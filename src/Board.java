@@ -7,7 +7,7 @@ public abstract class Board {
     protected MinePosition[] minePositions;// tracks positions of each mine
 
     public abstract void generateBoard();
-    public abstract void placeMines(int totalMines);
+    public abstract void placeMines();
     public abstract void placeNumbers();
     public abstract char getBoardPosition(int row, int col);
     public abstract void setBoardPosition(int row, int col, char value);

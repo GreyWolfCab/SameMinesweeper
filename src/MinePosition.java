@@ -8,8 +8,12 @@ public class MinePosition {
         this.col = col;
     }
 
-    public int[] getPosition() {
-        return new int[] {row, col};
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
     }
 
     public String toString() {
