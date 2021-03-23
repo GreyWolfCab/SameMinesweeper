@@ -1,3 +1,5 @@
+package board;
+
 public class GenerateBoard extends Board {
 
     private static final char MINE = '*';
@@ -52,6 +54,10 @@ public class GenerateBoard extends Board {
                 minePositions[i] = new MinePosition(rowPosition, colPosition);
             }
 
+        }
+
+        for (int i = 0; i < minePositions.length; i++) {
+            System.out.println(minePositions[i]);
         }
 
     }

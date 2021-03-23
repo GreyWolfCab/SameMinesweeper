@@ -1,3 +1,5 @@
+package board;
+
 public abstract class Board {
 
     protected int rowDimension;//west-east size of board

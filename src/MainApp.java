@@ -1,3 +1,9 @@
+import board.Board;
+import board.GenerateBoard;
+import gui.DrawBoard;
+
+import javax.swing.*;
+
 public class MainApp {
 
     public static void main(String[] agrs) {
@@ -18,9 +24,7 @@ public class MainApp {
 
         }
 
-        for (int i = 0; i < board.minePositions.length; i++) {
-            System.out.println(board.minePositions[i]);
-        }
+        SwingUtilities.invokeLater(new DrawBoard());
 
     }
 
