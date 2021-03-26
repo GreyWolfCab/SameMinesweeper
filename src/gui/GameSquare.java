@@ -1,17 +1,36 @@
 package gui;
 
+import board.Board;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GameSquare {
 
-    private int xPos = 50;
-    private int yPos = 50;
-    private int width = 48;
-    private int height = 48;
+    public static int width = 48;
+    public static int height = 48;
+
+    private int row;
+    private int col;
+    private int xPos;
+    private int yPos;
     private BufferedImage image;
 
-    public GameSquare(char element) {
+    public GameSquare(int row, int col, char element) {
+
+        this.row = row;
+        this.col = col;
+        if (col != 0) {
+            xPos = col * (width / Board.colDimension);
+        } else {
+            xPos = 0;
+        }
+
+        if (row != 0) {
+            yPos = row * (height / Board.rowDimension);
+        } else {
+            yPos = 0;
+        }
 
         setImage(element);
 
@@ -48,6 +67,14 @@ public class GameSquare {
 
     }
 
+    public void setRow(int row) { this.row = row; }
+
+    public void setCol(int col) { this.col = col; }
+
+    public int getRow() { return row; }
+
+    public int getCol() { return col; }
+
     public void setX(int xPos) {
         this.xPos = xPos;
     }
@@ -64,6 +91,14 @@ public class GameSquare {
         return yPos;
     }
 
+    public static void setWidth(int width) {
+        GameSquare.width = width;
+    }
+
+    public static void setHeight(int height) {
+        GameSquare.height = height;
+    }
+
     public int getWidth() {
         return width;
     }
@@ -73,8 +108,6 @@ public class GameSquare {
     }
 
     public void paintSquare(Graphics g) {
-//        g.setColor(Color.RED);
-//        g.fillRect(xPos, yPos, width, height);
-        g.drawImage(image, xPos, yPos, null);
+        g.drawImage(image, xPos, yPos, width, height, null);
     }
 }

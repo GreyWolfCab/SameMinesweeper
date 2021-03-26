@@ -2,8 +2,8 @@ package board;
 
 public abstract class Board {
 
-    protected int rowDimension;//west-east size of board
-    protected int colDimension;//north-south size of board
+    public static int rowDimension;//west-east size of board
+    public static int colDimension;//north-south size of board
 
     protected static char[][] board;// includes mine information
     protected MinePosition[] minePositions;// tracks positions of each mine

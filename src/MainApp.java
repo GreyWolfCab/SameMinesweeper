@@ -8,7 +8,7 @@ public class MainApp {
 
     public static void main(String[] agrs) {
 
-        int boardRow = 9;
+        int boardRow = 15;
         int boardCol = 11;
         Board board = new GenerateBoard(boardRow, boardCol);
 
