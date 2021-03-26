@@ -26,7 +26,7 @@ public class GenerateBoard extends Board {
 
             for (int c = 0; c < colDimension; c++) {//x-axis equals cols
 
-                board[r][c] = ' ';
+                board[r][c] = '0';
 
             }
         }

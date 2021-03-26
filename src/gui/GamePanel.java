@@ -1,6 +1,7 @@
 package gui;
 
 import board.Board;
+import board.GenerateBoard;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,17 +18,15 @@ public class GamePanel extends JPanel {
 
         setBorder(BorderFactory.createLineBorder(Color.BLACK));//draws a border around the panel
 
-//        addMouseListener(new MouseAdapter() {
-//            public void mousePressed(MouseEvent e) {
-//                moveSquare(e.getX(), e.getY());
-//            }
-//        });
-//
-//        addMouseMotionListener(new MouseAdapter() {
-//            public void mouseDragged(MouseEvent e) {
-//                moveSquare(e.getX(), e.getY());
-//            }
-//        });
+        addMouseListener(new MouseAdapter() {
+            //listen for what square on the grid has been pressed
+            public void mousePressed(MouseEvent e) {
+                int selectedRow = e.getY() / gameSquares[0][0].getHeight();
+                int selectedCol = e.getX() / gameSquares[0][0].getWidth();
+                revealSquare(selectedRow, selectedCol);//update the game square with its true element
+                drawRevealedSquare(selectedRow, selectedCol);//draw the updated square element
+            }
+        });
 
         addComponentListener(new ComponentAdapter() {
             /**
@@ -45,21 +44,8 @@ public class GamePanel extends JPanel {
 
                     for (int c = 0; c < gameSquares[r].length; c++) {
 
-                        // Current square state, stored as final variables
-                        // to avoid repeat invocations of the same methods.
-                        final int CURR_X = gameSquares[r][c].getX();
-                        final int CURR_Y = gameSquares[r][c].getY();
-                        final int CURR_W = gameSquares[r][c].getWidth();
-                        final int CURR_H = gameSquares[r][c].getHeight();
-                        final int OFFSET = 1;//what does this do?
-                        repaint(CURR_X, CURR_Y, CURR_W+OFFSET, CURR_H+OFFSET);//paints over the previous square
-                        gameSquares[r][c].setX(c * (currentSize.width / gameSquares[r].length) );//updates square position
-                        gameSquares[r][c].setY(r * (currentSize.height / gameSquares.length));
-                        //paints the new square in the new position
-                        repaint(gameSquares[r][c].getX(), gameSquares[r][c].getY(),
-                                (currentSize.width / gameSquares[0].length)+OFFSET,
-                                (currentSize.height / gameSquares.length)+OFFSET);
-                        //swing handles both repaint calls in one operation
+                        drawResizedBoard(r, c, currentSize);//redraw every square based on the new size
+
                     }
 
                 }
@@ -75,18 +61,20 @@ public class GamePanel extends JPanel {
 
     }
 
-    /**
-     * sets the default size of the panel, initially the app window takes up a small amount of screen space
-     * @return a panel with the given dimensions
-     */
-    public Dimension getPreferredSize() {
-        int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 3;
-        int height = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 1.5);
-        return new Dimension(width, height);
+    private void revealSquare(int selectedRow, int selectedCol) {
+        //update square with revealed element
+        gameSquares[selectedRow][selectedCol].setImage(Board.board[selectedRow][selectedCol]);
     }
 
-    public Dimension getCurrentSize() {
-        return this.getSize();
+    private void drawRevealedSquare(int selectedRow, int selectedCol) {
+        // Current square state, stored as final variables
+        // to avoid repeat invocations of the same methods.
+        final int CURR_X = gameSquares[selectedRow][selectedCol].getX();
+        final int CURR_Y = gameSquares[selectedRow][selectedCol].getY();
+        final int CURR_W = gameSquares[selectedRow][selectedCol].getWidth();
+        final int CURR_H = gameSquares[selectedRow][selectedCol].getHeight();
+        final int OFFSET = 1;//what does this do?
+        repaint(CURR_X, CURR_Y, CURR_W+OFFSET, CURR_H+OFFSET);//paints over the previous square
     }
 
     /**
@@ -134,6 +122,40 @@ public class GamePanel extends JPanel {
 
         }
 
+    }
+
+    private void drawResizedBoard(int r, int c, Dimension currentSize) {
+
+        // Current square state, stored as final variables
+        // to avoid repeat invocations of the same methods.
+        final int CURR_X = gameSquares[r][c].getX();
+        final int CURR_Y = gameSquares[r][c].getY();
+        final int CURR_W = gameSquares[r][c].getWidth();
+        final int CURR_H = gameSquares[r][c].getHeight();
+        final int OFFSET = 1;//what does this do?
+        repaint(CURR_X, CURR_Y, CURR_W+OFFSET, CURR_H+OFFSET);//paints over the previous square
+        gameSquares[r][c].setX(c * (currentSize.width / gameSquares[r].length) );//updates square position
+        gameSquares[r][c].setY(r * (currentSize.height / gameSquares.length));
+        //paints the new square in the new position
+        repaint(gameSquares[r][c].getX(), gameSquares[r][c].getY(),
+                (currentSize.width / gameSquares[0].length)+OFFSET,
+                (currentSize.height / gameSquares.length)+OFFSET);
+        //swing handles both repaint calls in one operation
+
+    }
+
+    /**
+     * sets the default size of the panel, initially the app window takes up a small amount of screen space
+     * @return a panel with the given dimensions
+     */
+    public Dimension getPreferredSize() {
+        int width = (int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 3;
+        int height = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 1.5);
+        return new Dimension(width, height);
+    }
+
+    public Dimension getCurrentSize() {
+        return this.getSize();
     }
 
 }

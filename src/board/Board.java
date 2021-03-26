@@ -5,7 +5,7 @@ public abstract class Board {
     public static int rowDimension;//west-east size of board
     public static int colDimension;//north-south size of board
 
-    protected static char[][] board;// includes mine information
+    public static char[][] board;// includes mine information
     protected MinePosition[] minePositions;// tracks positions of each mine
 
     public abstract void generateBoard();
