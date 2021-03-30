@@ -3,16 +3,12 @@ package board;
 public class GenerateBoard extends Board {
 
     private static final char MINE = '*';
-    private int totalMines;// = rowDimension + colDimension * Max(rowDimension, colDimension) * 0.82
-    private double minePercentage;//if row + col <&> 20 : 0.1; >= 32 : 0.55; >= 46 : 0.82
-    //16x16 = 40 mines
-    //9x9 = 10 mines
-    //30x16 = 99 mines
+    private int totalMines;// = (rowDimension + colDimension) * ln(Max(rowDimension, colDimension)) * minePercentage
 
     public GenerateBoard(int row, int col) {
         rowDimension = row;
         colDimension = col;
-        totalMines = (int) Math.sqrt(row * col);
+        totalMines = calculateMineCount(row, col);
         System.out.println(totalMines);
         generateBoard();
         placeMines();//number of mines is square root of board size
@@ -123,5 +119,35 @@ public class GenerateBoard extends Board {
     @Override
     public void setBoardPosition(int row, int col, char value) {
         board[row][col] = value;
+    }
+
+    /**
+     * determine the difficulty by generating a certain number of mines based on the size of the board
+     * @param row the vertical direction of the board
+     * @param col the horizontal direction of the board
+     * @return the total number of mines to place on the board
+     */
+    private int calculateMineCount(int row, int col) {
+
+        // = (rowDimension + colDimension) * ln(Max(rowDimension, colDimension)) * minePercentage
+        //if row + col <&> 20 : 0.26; >= 32 : 0.46; >= 46 : 0.64
+        //16x16 = 40 mines
+        //9x9 = 10 mines
+        //30x16 = 99 mines
+
+        int maxValue = Math.max(row, col);//max value between board shape
+        int sum = row + col;//sum of board shape values
+        double minePercentage;//difficulty percentage according to board size
+
+        if (sum < 32) {//smaller boards are less difficult
+            minePercentage = 0.26;
+        } else if (sum <= 46) {//medium boards retain more mines
+            minePercentage = 0.46;
+        } else {
+            minePercentage = 0.64;//large boards have tons of mines
+        }
+
+        return (int) (sum * Math.log(maxValue) * minePercentage);//guess what this does...
+
     }
 }

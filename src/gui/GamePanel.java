@@ -24,14 +24,19 @@ public class GamePanel extends JPanel {
                 int selectedRow = e.getY() / gameSquares[0][0].getHeight();
                 int selectedCol = e.getX() / gameSquares[0][0].getWidth();
 
-                //if click on 0, reveal all adjacent zeroes and any numbers touching a zero
-                if (Board.board[selectedRow][selectedCol] == '0') {
-                    //reveal all connected zero squares
-                    revealSurrounding(selectedRow, selectedCol);
-                } else {
-                    revealSquare(selectedRow, selectedCol);//update the game square with its true element
-                    drawRevealedSquare(selectedRow, selectedCol);//draw the updated square element
+                try {
+                    //if click on 0, reveal all adjacent zeroes and any numbers touching a zero
+                    if (Board.board[selectedRow][selectedCol] == '0') {
+                        //reveal all connected zero squares
+                        revealSurrounding(selectedRow, selectedCol);
+                    } else {
+                        revealSquare(selectedRow, selectedCol);//update the game square with its true element
+                        drawRevealedSquare(selectedRow, selectedCol);//draw the updated square element
+                    }
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    System.out.println("Game Square not found.");
                 }
+
             }
         });
 
