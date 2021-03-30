@@ -13,8 +13,7 @@ public class DrawBoard implements Runnable {
     }
 
     private void createAndShowGUI() {
-        System.out.println("Created GUI on EDT? "+
-                SwingUtilities.isEventDispatchThread());
+
         JFrame f = new JFrame("Minesweeper");//title of the canvas
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//kill the program after closing the frame
         f.add(new GamePanel());//panel that draws the contents of the game board

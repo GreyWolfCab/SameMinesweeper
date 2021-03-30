@@ -3,12 +3,17 @@ package board;
 public class GenerateBoard extends Board {
 
     private static final char MINE = '*';
-    private int totalMines;
+    private int totalMines;// = rowDimension + colDimension * Max(rowDimension, colDimension) * 0.82
+    private double minePercentage;//if row + col <&> 20 : 0.1; >= 32 : 0.55; >= 46 : 0.82
+    //16x16 = 40 mines
+    //9x9 = 10 mines
+    //30x16 = 99 mines
 
     public GenerateBoard(int row, int col) {
         rowDimension = row;
         colDimension = col;
         totalMines = (int) Math.sqrt(row * col);
+        System.out.println(totalMines);
         generateBoard();
         placeMines();//number of mines is square root of board size
         placeNumbers();
@@ -76,9 +81,8 @@ public class GenerateBoard extends Board {
 
                     for (int c = originCol - 1; c < originCol + 2; c++) {//iterate through 3x3 surrounding cols
 
-                        //check if c is < 0 or > maxCol
+                        //check if c is < 0 or > maxCol AND if r & c are not the origin
                         if ((c >= 0 && c < colDimension) && (r != originRow || c != originCol)) {
-                            //check if r & c are the origin
                             char element = getBoardPosition(r, c);
                             if (element != '*') {//avoid overwriting mines
                                 if (element == ' ') {//if blank space

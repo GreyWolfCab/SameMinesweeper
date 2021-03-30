@@ -15,6 +15,7 @@ public class GameSquare {
     private int xPos;
     private int yPos;
     private BufferedImage image;
+    private char element;
 
     public GameSquare(int row, int col, char element) {
 
@@ -33,6 +34,7 @@ public class GameSquare {
         }
 
         setImage(element);
+        this.element = element;
 
     }
 
@@ -105,6 +107,12 @@ public class GameSquare {
 
     public int getHeight() {
         return height;
+    }
+
+    public void setElement(char element) { this.element = element; }
+
+    public char getElement() {
+        return element;
     }
 
     public void paintSquare(Graphics g) {

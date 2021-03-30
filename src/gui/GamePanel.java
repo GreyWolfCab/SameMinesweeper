@@ -23,8 +23,15 @@ public class GamePanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 int selectedRow = e.getY() / gameSquares[0][0].getHeight();
                 int selectedCol = e.getX() / gameSquares[0][0].getWidth();
-                revealSquare(selectedRow, selectedCol);//update the game square with its true element
-                drawRevealedSquare(selectedRow, selectedCol);//draw the updated square element
+
+                //if click on 0, reveal all adjacent zeroes and any numbers touching a zero
+                if (Board.board[selectedRow][selectedCol] == '0') {
+                    //reveal all connected zero squares
+                    revealSurrounding(selectedRow, selectedCol);
+                } else {
+                    revealSquare(selectedRow, selectedCol);//update the game square with its true element
+                    drawRevealedSquare(selectedRow, selectedCol);//draw the updated square element
+                }
             }
         });
 
@@ -61,9 +68,46 @@ public class GamePanel extends JPanel {
 
     }
 
+    private void revealSurrounding(int selectedRow, int selectedCol) {
+
+        for (int r = selectedRow - 1; r <= selectedRow+1; r++) {//iterate through the above and below row
+
+            //prevent r from being < 0 or > maxRow (avoid index out of bounds)
+            if (r >= 0 && r < Board.rowDimension) {
+
+                //iterate through the left and right column
+                for (int c = selectedCol - 1; c <= selectedCol+1; c++) {
+
+                    //check if c is < 0 or > maxCol
+                    if (c >= 0 && c < Board.colDimension) {
+
+                        if (gameSquares[r][c].getElement() == ' ') {//avoid duplicate checks on squares
+
+                            if (Board.board[r][c] == '0') {//if the square is zero
+                                revealSquare(r, c);//update the game square with its true element
+                                drawRevealedSquare(r, c);//draw the updated square element
+                                revealSurrounding(r, c);//reveal the surrounding squares
+                            } else {
+                                revealSquare(r, c);//update the game square with its true element
+                                drawRevealedSquare(r, c);//draw the updated square element
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
     private void revealSquare(int selectedRow, int selectedCol) {
         //update square with revealed element
         gameSquares[selectedRow][selectedCol].setImage(Board.board[selectedRow][selectedCol]);
+        gameSquares[selectedRow][selectedCol].setElement(Board.board[selectedRow][selectedCol]);
     }
 
     private void drawRevealedSquare(int selectedRow, int selectedCol) {
