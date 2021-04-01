@@ -1,5 +1,7 @@
 package gui;
 
+import board.Board;
+
 import javax.swing.*;
 
 public class DrawBoard implements Runnable {

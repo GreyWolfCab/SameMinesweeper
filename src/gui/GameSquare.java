@@ -17,18 +17,18 @@ public class GameSquare {
     private BufferedImage image;
     private char element;
 
-    public GameSquare(int row, int col, char element) {
+    public GameSquare(int row, int col, char element, int rowDimension, int colDimension) {
 
         this.row = row;
         this.col = col;
         if (col != 0) {
-            xPos = col * (width / Board.colDimension);
+            xPos = col * (width / rowDimension);
         } else {
             xPos = 0;
         }
 
         if (row != 0) {
-            yPos = row * (height / Board.rowDimension);
+            yPos = row * (height / colDimension);
         } else {
             yPos = 0;
         }

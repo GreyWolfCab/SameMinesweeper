@@ -12,9 +12,28 @@ import java.awt.event.MouseEvent;
 
 public class GamePanel extends JPanel {
 
-    private GameSquare[][] gameSquares = new GameSquare[Board.rowDimension][Board.colDimension];
+    private GameSquare[][] gameSquares;
+    private Board board;
 
     public GamePanel() {
+
+        int boardRow = 16;
+        int boardCol = 16;
+        board = new GenerateBoard(boardRow, boardCol);
+
+//        for (int i = 0; i < boardRow; i++) {
+//
+//            for (int j = 0; j < boardCol; j++) {
+//
+//                System.out.print(board.getBoardPosition(i, j) + ", ");
+//
+//            }
+//
+//            System.out.println();
+//
+//        }
+
+        gameSquares = new GameSquare[board.getRowDimension()][board.getColDimension()];
 
         setBorder(BorderFactory.createLineBorder(Color.BLACK));//draws a border around the panel
 
@@ -24,17 +43,11 @@ public class GamePanel extends JPanel {
                 int selectedRow = e.getY() / gameSquares[0][0].getHeight();
                 int selectedCol = e.getX() / gameSquares[0][0].getWidth();
 
-                try {
-                    //if click on 0, reveal all adjacent zeroes and any numbers touching a zero
-                    if (Board.board[selectedRow][selectedCol] == '0') {
-                        //reveal all connected zero squares
-                        revealSurrounding(selectedRow, selectedCol);
-                    } else {
-                        revealSquare(selectedRow, selectedCol);//update the game square with its true element
-                        drawRevealedSquare(selectedRow, selectedCol);//draw the updated square element
-                    }
-                } catch (ArrayIndexOutOfBoundsException aioobe) {
-                    System.out.println("Game Square not found.");
+                switch (e.getButton()) {
+                    case MouseEvent.BUTTON1: boardLeftClick(selectedRow, selectedCol);
+                        break;
+                    case MouseEvent.BUTTON3: boardRightClick(selectedRow, selectedCol);
+                        break;
                 }
 
             }
@@ -73,22 +86,61 @@ public class GamePanel extends JPanel {
 
     }
 
+    private void boardLeftClick(int row, int col) {
+
+        try {
+            //if click on 0, reveal all adjacent zeroes and any numbers touching a zero
+            if (board.getBoardPosition(row, col) == '0') {
+                //reveal all connected zero squares
+                revealSurrounding(row, col);
+            } else {
+                revealSquare(row, col);//update the game square with its true element
+                drawRevealedSquare(row, col);//draw the updated square element
+            }
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            System.out.println("Game Square not found.");
+        }
+
+    }
+
+    private void boardRightClick(int row, int col) {
+
+        try {
+            //if click on unopened square,
+            if (gameSquares[row][col].getElement() == ' ') {
+                //set a flag on this square
+                gameSquares[row][col].setImage('!');
+                gameSquares[row][col].setElement('!');
+                drawRevealedSquare(row, col);
+                //TODO: add row and col to flag list
+            } else if (gameSquares[row][col].getElement() == '!') {//if clicking on flagged square
+                //remove flag from this square
+                gameSquares[row][col].setImage(' ');
+                gameSquares[row][col].setElement(' ');
+                drawRevealedSquare(row, col);
+            }
+        } catch (ArrayIndexOutOfBoundsException aioobe) {
+            System.out.println("Game Square not found.");
+        }
+
+    }
+
     private void revealSurrounding(int selectedRow, int selectedCol) {
 
         for (int r = selectedRow - 1; r <= selectedRow+1; r++) {//iterate through the above and below row
 
             //prevent r from being < 0 or > maxRow (avoid index out of bounds)
-            if (r >= 0 && r < Board.rowDimension) {
+            if (r >= 0 && r < board.getRowDimension()) {
 
                 //iterate through the left and right column
                 for (int c = selectedCol - 1; c <= selectedCol+1; c++) {
 
                     //check if c is < 0 or > maxCol
-                    if (c >= 0 && c < Board.colDimension) {
+                    if (c >= 0 && c < board.getColDimension()) {
 
                         if (gameSquares[r][c].getElement() == ' ') {//avoid duplicate checks on squares
 
-                            if (Board.board[r][c] == '0') {//if the square is zero
+                            if (board.getBoardPosition(r, c) == '0') {//if the square is zero
                                 revealSquare(r, c);//update the game square with its true element
                                 drawRevealedSquare(r, c);//draw the updated square element
                                 revealSurrounding(r, c);//reveal the surrounding squares
@@ -111,8 +163,8 @@ public class GamePanel extends JPanel {
 
     private void revealSquare(int selectedRow, int selectedCol) {
         //update square with revealed element
-        gameSquares[selectedRow][selectedCol].setImage(Board.board[selectedRow][selectedCol]);
-        gameSquares[selectedRow][selectedCol].setElement(Board.board[selectedRow][selectedCol]);
+        gameSquares[selectedRow][selectedCol].setImage(board.getBoardPosition(selectedRow, selectedCol));
+        gameSquares[selectedRow][selectedCol].setElement(board.getBoardPosition(selectedRow, selectedCol));
     }
 
     private void drawRevealedSquare(int selectedRow, int selectedCol) {
@@ -148,7 +200,8 @@ public class GamePanel extends JPanel {
 
             for (int c = 0; c < gameSquares[r].length; c++) {
 
-                gameSquares[r][c] = new GameSquare(r, c, ' ');//set every square to be unopend by default
+                gameSquares[r][c] = new GameSquare(r, c, ' ',
+                        board.getRowDimension(), board.getColDimension());//set every square to be unopend by default
 
             }
 
